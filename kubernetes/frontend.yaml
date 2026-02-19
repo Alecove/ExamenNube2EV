@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: tu_usuario_dockerhub/frontend-examen:latest # CHANGE THIS IN EXAM
+        image: alecove/temperaturas-frontend:latest
         ports:
         - containerPort: 80
 

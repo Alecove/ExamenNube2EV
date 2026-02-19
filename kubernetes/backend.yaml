@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: tu_usuario_dockerhub/backend-examen:latest # CHANGE THIS IN EXAM
+        image: alecove/temperaturas-backend:latest
         ports:
         - containerPort: 3500
         env:
