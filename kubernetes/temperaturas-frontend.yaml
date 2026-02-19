@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: temperaturas-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: temperaturas-frontend
+  template:
+    metadata:
+      labels:
+        app: temperaturas-frontend
+    spec:
+      containers:
+      - name: temperaturas-frontend
+        image: tu_usuario_dockerhub/temperaturas-frontend:latest # CHANGE THIS
+        ports:
+        - containerPort: 3000
+        env:
+        - name: TEMP_SERVER
+          value: "temperaturas-backend:5000" # Connects to backend service
+        - name: REACT_APP_TEMP_SERVER # Just in case React needs it this way
+          value: "http://temperaturas-backend:5000"
+        - name: PROXY_HOST # Some setups use this
+          value: "temperaturas-backend"
+        - name: PROXY_PORT
+          value: "5000"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: temperaturas-frontend
+spec:
+  selector:
+    app: temperaturas-frontend
+  ports:
+    - protocol: TCP
+      port: 80       # Expose on port 80 externally
+      targetPort: 3000 # Forward to container port 3000
+  type: LoadBalancer
