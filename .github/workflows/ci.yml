@@ -1,0 +1,38 @@
+name: Construir y Subir a Docker Hub
+
+# Esto hace que se ejecute cada vez que haces un 'push' a la rama principal
+on:
+  push:
+    branches: [ "main", "master" ]
+
+jobs:
+  build-y-push:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # 1. Descarga tu código en la máquina de GitHub
+      - name: Descargar código
+        uses: actions/checkout@v4
+
+      # 2. Inicia sesión en tu Docker Hub usando los secretos que creaste
+      - name: Iniciar sesión en Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # 3. Construye y sube la imagen del BACKEND
+      - name: Build and push Backend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/temperaturas-backend:latest
+
+      # 4. Construye y sube la imagen del FRONTEND
+      - name: Build and push Frontend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/temperaturas-frontend:latest
