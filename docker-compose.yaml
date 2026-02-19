@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  # Servicio del BACKEND
+  temperaturas-backend:
+    build: 
+      context: ./backend
+    container_name: temperaturas-backend
+    restart: always
+    # No es obligatorio exponer el puerto al exterior si solo lo usa el front,
+    # pero lo ponemos para que puedas probarlo tú en el 5000
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=development
+
+  # Servicio del FRONTEND
+  temperaturas-frontend:
+    build: 
+      context: ./frontend
+    container_name: temperaturas-frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    # Aquí está la clave: le decimos dónde está el backend por su nombre de servicio
+    environment:
+      - TEMP_SERVER=temperaturas-backend:5000
+    depends_on:
+      - temperaturas-backend
